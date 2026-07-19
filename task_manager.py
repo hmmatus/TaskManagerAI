@@ -10,8 +10,8 @@ class Task:
     return f"[{status}]: {self.description}"
   
 class TaskManager:
-  def __init__(self):
-    self.FILENAME = "tasks.json"
+  def __init__(self, filename="tasks.json"):
+    self.FILENAME = filename
     self.load_tasks()
   
   def add_task(self, description):
