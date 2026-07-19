@@ -1,5 +1,5 @@
 from task_manager import TaskManager
-
+from ai_service import create_simple_tasks
 def print_menu():
   print("""
   ________________________________________
@@ -9,7 +9,8 @@ def print_menu():
   2. Add Task
   3. Complete Task
   4. Delete Task
-  5. Exit
+  5. Create Simple Tasks
+  6. Exit
   """)
   
 def main():
@@ -31,8 +32,16 @@ def main():
         case "4":
           id = int(input("Enter task id: "))
           task_manager.delete_task(id)
-          pass
         case "5":
+          description = input("Enter task description: ")
+          subtasks = create_simple_tasks(description)
+          for subtask in subtasks:
+            if not subtask.startswith("Error:"):
+              task_manager.add_task(subtask)
+            else:
+              print(subtasks)
+              break
+        case "6":
           print("Exiting...")
           break
         case _:

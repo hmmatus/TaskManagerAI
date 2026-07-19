@@ -1,3 +1,7 @@
 .venv/
 __pycache__/
 tasks.json
+
+.env.local
+.env
+.vscode/
