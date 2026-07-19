@@ -1,4 +1,13 @@
 import json
+
+from cli_style import (
+  format_task_row,
+  print_error,
+  print_success,
+  print_task_list_footer,
+  print_task_list_header,
+)
+
 class Task:
   def __init__(self, id, description, completed=False):
     self.id = id
@@ -18,15 +27,16 @@ class TaskManager:
     task = Task(self.next_id, description)
     self.tasks.append(task)
     self.next_id += 1
-    print(f"Task added: {task}")
+    print_success(f"Task added: {task}")
     self.save_tasks()
   
   def list_tasks(self):
-    if not self.tasks:
-      print("No tasks found")
+    completed = sum(1 for task in self.tasks if task.completed)
+    if not print_task_list_header(len(self.tasks), completed):
       return
     for task in self.tasks:
-      print(task)
+      print(format_task_row(task))
+    print_task_list_footer()
   
   def get_task(self, id):
     for task in self.tasks:
@@ -38,19 +48,19 @@ class TaskManager:
     task = self.get_task(id)
     if task:
       task.completed = True
-      print(f"Task completed: {task}")
+      print_success(f"Task completed: {task}")
       self.save_tasks()
     else:
-      print(f"Task with id {id} not found")
+      print_error(f"Task with id {id} not found")
   
   def delete_task(self, id):
     task = self.get_task(id)
     if task:
       self.tasks.remove(task)
-      print(f"Task deleted: {task}")
+      print_success(f"Task deleted: {task}")
       self.save_tasks()
     else:
-      print(f"Task with id {id} not found")
+      print_error(f"Task with id {id} not found")
       
   def load_tasks(self):
     try:

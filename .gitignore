@@ -5,3 +5,5 @@ tasks.json
 .env.local
 .env
 .vscode/
+.coverage
+.coveragegerc

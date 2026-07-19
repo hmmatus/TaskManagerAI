@@ -107,9 +107,29 @@ def test_delete_task_removes_and_saves(manager, tasks_file):
   assert json.loads(tasks_file.read_text()) == []
 
 
-def test_delete_task_missing_id_no_crash(manager):
+def test_delete_task_missing_id_no_crash(manager, capsys):
   manager.add_task("keep me")
 
   manager.delete_task(99)
 
+  captured = capsys.readouterr()
+  assert "Task with id 99 not found" in captured.out
   assert len(manager.tasks) == 1
+
+
+def test_load_tasks_empty_array_starts_with_next_id_one(tasks_file):
+  write_tasks(tasks_file, [])
+
+  manager = TaskManager(filename=str(tasks_file))
+
+  assert manager.tasks == []
+  assert manager.next_id == 1
+
+
+def test_save_tasks_handles_write_error(manager, mocker, capsys):
+  mocker.patch("builtins.open", side_effect=PermissionError("denied"))
+
+  manager.add_task("test")
+
+  captured = capsys.readouterr()
+  assert "Error saving tasks: denied" in captured.out
